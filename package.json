@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/reecube/sense-firebase/issues"
   },
-  "homepage": "https://github.com/reecube/sense-firebase#readme"
+  "homepage": "https://github.com/reecube/sense-firebase#readme",
+  "dependencies": {
+    "node-sense-hat": "^0.0.2"
+  }
 }
