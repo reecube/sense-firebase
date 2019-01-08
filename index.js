@@ -57,18 +57,12 @@ const Main = function () {
     SenseHat.Joystick.getJoystick().then(joystick => {
         logger.debug('listen to joystick actions...');
 
-        const joystickActions = [
-            'press',
-            'release',
-            'hold',
-        ];
-
-        for (let i = 0; i < joystickActions; i++) {
-            let joystickAction = joystickActions[i];
-            joystick.on(joystickAction, direction => {
-                db.ref('joystick/' + direction).set(joystickAction);
-            });
-        }
+        joystick.on('press', direction => {
+            db.ref('joystick/' + direction).set('pressed');
+        });
+        joystick.on('release', direction => {
+            db.ref('joystick/' + direction).set('released');
+        });
     });
 
     db.ref('matrix').on('value', function (snapshot) {

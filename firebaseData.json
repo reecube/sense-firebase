@@ -10,11 +10,11 @@
     [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]
   ],
   "joystick": {
-    "up": "none",
-    "down": "none",
-    "left": "none",
-    "right": "none",
-    "click": "none"
+    "up": "released",
+    "down": "released",
+    "left": "released",
+    "right": "released",
+    "click": "released"
   },
   "imu": {
     "accel": 0,
