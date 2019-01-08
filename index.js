@@ -6,7 +6,17 @@ logger.debug('loading');
 
 // Load dependencies
 
-const SenseHat = require('node-sense-hat');
+/**
+ * @see https://github.com/balena-io-playground/node-sense-hat
+ * @see https://github.com/balena-io-playground/sense-joystick
+ * @see https://github.com/rupnikj/nodeimu
+ * @see https://github.com/aonghusonia/sense-hat-led
+ */
+const SenseHat = {
+    Joystick: require('sense-joystick'),
+    Leds: require('sense-hat-led'),
+    Imu: require('nodeimu'),
+};
 const Shapes = require('./shapes.js');
 const Cleanup = require('./cleanup.js')(process);
 const Firebase = require('./firebase.js');

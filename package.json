@@ -18,7 +18,9 @@
   "homepage": "https://github.com/reecube/sense-firebase#readme",
   "dependencies": {
     "firebase-admin": "^6.4.0",
-    "node-sense-hat": "^0.0.2",
+    "nodeimu": "^2.1.9",
+    "sense-hat-led": "^1.0.1",
+    "sense-joystick": "^0.0.3",
     "stack-trace": "^0.0.10"
   }
 }
