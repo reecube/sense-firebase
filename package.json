@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/reecube/sense-firebase#readme",
   "dependencies": {
-    "node-sense-hat": "^0.0.2"
+    "firebase-admin": "^6.4.0",
+    "node-sense-hat": "^0.0.2",
+    "stack-trace": "^0.0.10"
   }
 }
