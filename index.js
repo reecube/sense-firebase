@@ -34,29 +34,61 @@ const Main = function () {
 
     matrix.setPixels(Shapes.square(Shapes.colors.blue));
 
-    logger.debug('waiting for firebase...');
+    logger.debug('open firebase connection...');
 
+    const initialFirebaseData = require('./firebaseData.json');
     const firebase = Firebase();
-
     const db = firebase.database();
 
-    return db.ref('shape').on('value', function(snapshot) {
-        const nextShape = snapshot.val();
-
-        switch (nextShape) {
-            case 'cross':
-                matrix.setPixels(Shapes.cross());
-                break;
-            case 'square':
-                matrix.setPixels(Shapes.square());
-                break;
-            default:
-                matrix.clear([0, 0, 0]);
-                break;
-        }
-    }, function (errorObject) {
+    const handleFirebaseError = function (errorObject) {
         logger.error(errorObject);
+    };
+
+    logger.debug('reset firebase data...');
+
+    for (let ifdKey in initialFirebaseData) {
+        if (!initialFirebaseData.hasOwnProperty(ifdKey)) {
+            continue;
+        }
+
+        db.ref(ifdKey).set(initialFirebaseData[ifdKey]);
+    }
+
+    SenseHat.Joystick.getJoystick().then(joystick => {
+        logger.debug('listen to joystick actions...');
+
+        const joystickActions = [
+            'press',
+            'release',
+            'hold',
+        ];
+
+        for (let i = 0; i < joystickActions; i++) {
+            let joystickAction = joystickActions[i];
+            joystick.on(joystickAction, direction => {
+                db.ref('joystick/' + direction).set(joystickAction);
+            });
+        }
     });
+
+    db.ref('matrix').on('value', function (snapshot) {
+        const newState = snapshot.val();
+
+        matrix.setPixels(newState);
+    }, handleFirebaseError);
+
+    /**
+     * imu (rom)
+     * - accel
+     * - gyro
+     * - compass
+     * - fusionPose
+     * - temperature
+     * - pressure
+     * - humidity
+     *
+     * TODO: implement this and remove imu
+     */
 };
 
 logger.debug('ready');
