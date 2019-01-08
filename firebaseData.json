@@ -16,11 +16,28 @@
     "right": "released",
     "click": "released"
   },
+  "imuInterval": 60000,
   "imu": {
-    "accel": 0,
-    "gyro": 0,
-    "compass": 0,
-    "fusionPose": 0,
+    "accel": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyro": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "compass": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "fusionPose": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
     "temperature": 0,
     "pressure": 0,
     "humidity": 0

@@ -40,8 +40,8 @@ const Main = function () {
     const firebase = Firebase();
     const db = firebase.database();
 
-    const handleFirebaseError = function (errorObject) {
-        logger.error(errorObject);
+    const handleError = function (error) {
+        logger.error(error);
     };
 
     logger.debug('reset firebase data...');
@@ -69,20 +69,59 @@ const Main = function () {
         const newState = snapshot.val();
 
         matrix.setPixels(newState);
-    }, handleFirebaseError);
+    }, handleError);
 
-    /**
-     * imu (rom)
-     * - accel
-     * - gyro
-     * - compass
-     * - fusionPose
-     * - temperature
-     * - pressure
-     * - humidity
-     *
-     * TODO: implement this and remove imu
-     */
+    logger.debug('initialize the IMU instance...');
+    const imu = new SenseHat.Imu.IMU();
+
+    logger.debug('start the IMU reader...');
+    const imuTimer = {
+        reference: null,
+        interval: 1000 * 60,
+        intervalMin: 500,
+        intervalMax: 1000 * 60 * 60 * 24 * 30,
+        counter: 0,
+    };
+    db.ref('imuInterval').on('value', function (snapshot) {
+        const newInterval = parseInt(snapshot.val());
+
+        if (newInterval < imuTimer.intervalMin || newInterval > imuTimer.intervalMax) {
+            logger.error('Received invalid timer value from firebase!', newInterval);
+            return;
+        }
+
+        imuTimer.interval = newInterval;
+    }, handleError);
+    imuTimer.counter = imuTimer.interval + 1;
+    imuTimer.reference = setInterval(() => {
+        if (imuTimer.counter < imuTimer.interval) {
+            imuTimer.counter++;
+            return;
+        }
+
+        // Reset timer
+        imuTimer.counter = 0;
+
+        // Fetch IMU data
+        imu.getValue((error, data) => {
+            if (error) {
+                return handleError(error);
+            }
+
+            const imuData = {};
+
+            for (let imuKey in initialFirebaseData.imu) {
+                if (!initialFirebaseData.imu.hasOwnProperty(imuKey)) {
+                    continue;
+                }
+
+                imuData[imuKey] = data[imuKey];
+            }
+
+            db.ref('imu').set(imuData);
+        });
+    }, 1);
+
 };
 
 logger.debug('ready');
