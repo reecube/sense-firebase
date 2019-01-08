@@ -9,6 +9,7 @@ logger.debug('loading');
 const SenseHat = require('node-sense-hat');
 const Shapes = require('./shapes.js');
 const Cleanup = require('./cleanup.js')(process);
+const Firebase = require('./firebase.js');
 
 // MAIN CODE
 
@@ -25,7 +26,27 @@ const Main = function () {
 
     logger.debug('waiting for firebase...');
 
-    // TODO: add firebase
+    const firebase = Firebase();
+
+    const db = firebase.database();
+
+    return db.ref('shape').on('value', function(snapshot) {
+        const nextShape = snapshot.val();
+
+        switch (nextShape) {
+            case 'cross':
+                matrix.setPixels(Shapes.cross());
+                break;
+            case 'square':
+                matrix.setPixels(Shapes.square());
+                break;
+            default:
+                matrix.clear([0, 0, 0]);
+                break;
+        }
+    }, function (errorObject) {
+        logger.error(errorObject);
+    });
 };
 
 logger.debug('ready');
