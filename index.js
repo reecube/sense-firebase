@@ -1,27 +1,30 @@
-const Logger = function () {
-    return {
-        debug: function (message, ...optionalParams) {
-            console.log(`\`${__filename}\`: ${message}`, optionalParams);
-        },
-    };
-};
-
+// Pre loaded code
+const Logger = require('./logger.js');
 const logger = Logger();
 
-logger.debug('started');
+logger.debug('loading');
+
+// Load dependencies
+
+const SenseHat = require('node-sense-hat');
+const Shapes = require('./shapes.js');
+
+// MAIN CODE
 
 const Main = function () {
-    const senseHat = require('node-sense-hat');
+    const matrix = SenseHat.Leds;
 
-    const shapes = require('./shapes.js');
 
-    const matrix = senseHat.Leds;
 
-    matrix.setPixels(shapes.square(shapes.colors.blue));
+    matrix.setPixels(Shapes.square(Shapes.colors.blue));
 
     logger.debug('waiting for firebase...');
 
     // TODO: add firebase
 };
 
+logger.debug('ready');
+
 Main();
+
+process.exit();
