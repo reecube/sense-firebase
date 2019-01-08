@@ -1,8 +1,26 @@
 module.exports = function () {
-    const logMessage = function (message) {
-        const time = (new Date()).getTime();
+    const StackTrace = require('stack-trace');
 
-        return `${time}: \`${__filename}\`: ${message}`;
+    const logMessage = function (message) {
+        const time = new Date().getTime();
+
+        const traces = StackTrace.get();
+
+        let trace = null;
+        for (let i = 0; i < traces.length; i++) {
+            trace = traces[i];
+
+            if (trace.getFileName() === __filename) {
+                continue;
+            }
+
+            break;
+        }
+
+        const filename = trace ? trace.getFileName() : '?';
+        const lineNumber = trace ? trace.getLineNumber() : '?';
+
+        return `${time}: \`${filename}:${lineNumber}\`: ${message}`;
     };
 
     return {
